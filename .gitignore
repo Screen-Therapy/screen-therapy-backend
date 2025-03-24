@@ -1,4 +1,4 @@
-# 🔥 Firebase service account key (DO NOT PUSH THIS)
+# 🔥 Firebase service account key (DO NOT PUSH)
 serviceAccountKey.json
 
 # Binaries for programs and plugins
@@ -20,10 +20,10 @@ serviceAccountKey.json
 # Go workspace file
 go.work
 
-# Compiled Go binaries
-/bin/
-/build/
-/dist/
+# Compiled Go binaries (DO NOT PUSH)
+bin/
+build/
+dist/
 *.o
 *.a
 *.lo
@@ -47,9 +47,6 @@ trace.out
 .DS_Store
 Thumbs.db
 *.swp
-
-# Go module cache
-go.sum
 
 # 🔥 ENVIRONMENT FILES (for secrets & Firebase keys)
 .env
