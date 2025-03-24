@@ -1,6 +1,6 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
+# 🔥 Firebase service account key (DO NOT PUSH THIS)
+serviceAccountKey.json
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -19,3 +19,39 @@
 
 # Go workspace file
 go.work
+
+# Compiled Go binaries
+/bin/
+/build/
+/dist/
+*.o
+*.a
+*.lo
+*.la
+*.lai
+*.so
+*.dylib
+*.dll
+*.exe
+*.test
+*.out
+
+# Logs and debugging
+*.log
+*.log.*
+trace.out
+
+# Editor & OS-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Go module cache
+go.sum
+
+# 🔥 ENVIRONMENT FILES (for secrets & Firebase keys)
+.env
+.env.local
+.env.production
