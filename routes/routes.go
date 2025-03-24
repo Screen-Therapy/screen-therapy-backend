@@ -1,8 +1,17 @@
 package routes
 
-import "github.com/gorilla/mux"
+import (
+	"net/http"
 
-// RegisterRoutes sets up API routes (currently empty)
+	"github.com/gorilla/mux"
+)
+
+// Test handler function
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("🏡 Welcome to the Screen Therapy API!"))
+}
+
+// RegisterRoutes sets up API routes
 func RegisterRoutes(r *mux.Router) {
-	// Placeholder for future routes
+	r.HandleFunc("/", HomeHandler).Methods("GET")
 }
