@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"screen-therapy-backend/handlers"
 	"screen-therapy-backend/handlers/auth"
 
 	"github.com/gorilla/mux"
@@ -25,6 +26,10 @@ func RegisterRoutes(r *mux.Router) {
 	// 📧 Email Auth Routes
 	r.HandleFunc("/email/register", auth.RegisterEmailUser).Methods("POST")
 	r.HandleFunc("/email/login", auth.LoginEmailUser).Methods("POST")
+
+	// user routes
+	r.HandleFunc("/user/info/{userId}", handlers.GetUserInfo).Methods("GET")
+
 
 }
 
