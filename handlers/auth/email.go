@@ -9,6 +9,8 @@ import (
 
 	"screen-therapy-backend/config"
 	"screen-therapy-backend/models"
+
+	"cloud.google.com/go/firestore"
 )
 
 // RegisterEmailUser saves a new email user in Firestore (called after Firebase Auth sign-up)
@@ -24,7 +26,6 @@ func RegisterEmailUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("🔍 Checking if user already exists: %s\n", user.UserID)
 	doc, err := config.Client.Collection("users").Doc(user.UserID).Get(context.Background())
 	if err == nil && doc.Exists() {
 		log.Println("⚠️ User already exists")
@@ -32,11 +33,18 @@ func RegisterEmailUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("📝 Registering user: %+v\n", user)
+	friendCode := generateFriendCode()
+
 	_, err = config.Client.Collection("users").Doc(user.UserID).Set(context.Background(), map[string]interface{}{
-		"userId":   user.UserID,
-		"email":    user.Email,
-		"username": user.Username,
+		"userId":     user.UserID,
+		"email":      user.Email,
+		"username":   user.Username,
+		"friendCode": friendCode,
+		"roles": map[string]interface{}{
+			"guardianOf":    []string{},
+			"accountableTo": []string{},
+		},
+		"createdAt": firestore.ServerTimestamp,
 	})
 
 	if err != nil {
@@ -49,14 +57,12 @@ func RegisterEmailUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "✅ Email user registered successfully")
 }
 
-
 // LoginEmailUser checks if the user exists (called after Firebase Auth login)
 func LoginEmailUser(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		UserID string `json:"userId"`
 	}
 
-	// Decode request body
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data.UserID == "" {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
@@ -72,3 +78,4 @@ func LoginEmailUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "✅ Email user exists")
 }
+

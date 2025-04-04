@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 
 	"screen-therapy-backend/config"
@@ -31,11 +32,21 @@ func RegisterAppleUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = config.Client.Collection("users").Doc(user.UserID).Set(context.Background(), map[string]interface{}{
-		"userId": user.UserID,
-		"email":  user.Email,
-	})
+	// Generate friend code for invites
+	friendCode := generateFriendCode()
 
+
+	_, err = config.Client.Collection("users").Doc(user.UserID).Set(context.Background(), map[string]interface{}{
+		"userId":       user.UserID,
+		"email":        user.Email,
+		"friendCode":   friendCode,
+		"roles": map[string]interface{}{
+			"guardianOf":    []string{},
+			"accountableTo": []string{},
+		},
+		"createdAt": firestore.ServerTimestamp,
+	})
+	
 	if err != nil {
 		log.Printf("❌ Firestore error: %v", err)
 		http.Error(w, "Failed to store Apple user", http.StatusInternalServerError)
@@ -107,4 +118,14 @@ func SetAppleUsername(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "✅ Username set for Apple user")
+}
+
+
+func generateFriendCode() string {
+	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	code := make([]byte, 6)
+	for i := range code {
+		code[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(code)
 }
