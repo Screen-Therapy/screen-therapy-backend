@@ -5,6 +5,7 @@ import (
 	"screen-therapy-backend/handlers"
 	"screen-therapy-backend/handlers/auth"
 	"screen-therapy-backend/handlers/friends"
+	"screen-therapy-backend/handlers/shields"
 
 	"github.com/gorilla/mux"
 )
@@ -34,5 +35,8 @@ func RegisterRoutes(r *mux.Router) {
 	// 👥 Friend Routes
 	r.HandleFunc("/friends/add", friends.AddFriendHandler).Methods("POST")
 	r.HandleFunc("/friends/list", friends.GetFriendsHandler).Methods("GET")
+
+	r.HandleFunc("/shields", shields.CreateShieldHandler).Methods("POST")
+
 }
 
